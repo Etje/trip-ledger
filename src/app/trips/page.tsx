@@ -7,7 +7,6 @@ export default function TripsPage() {
         <div className="flex flex-col items-center justify-center gap-y-4">
             <Topbar />
             <TripForm />
-            <TripList />
         </div>
     );
 }

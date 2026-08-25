@@ -1,5 +1,6 @@
 'use client';
 
+import { redirect } from 'next/navigation'
 import { useState } from 'react';
 import { useTripStore } from '../../lib/useTripStore';
 import type { TransportMode, Trip } from '../../lib/types';
@@ -62,6 +63,8 @@ export default function TripForm() {
       normalCost: 0,
       note: '',
     });
+
+    redirect('/');
   };
 
   return (
