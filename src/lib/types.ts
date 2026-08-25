@@ -1,6 +1,24 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 
-export interface Trip {}
+export type TransportMode =
+	| "train"
+	| "bus"
+	| "tram"
+	| "metro"
+	| "bike"
+	| "walk"
+	| "car"
+	| "other";
+
+export interface Trip {
+	date: string;
+	from: string;
+	to: string;
+	mode: TransportMode;
+	actualCost: number;
+	normalCost: number;
+	note?: string;
+}
 
 export interface PointOfInterest {}
 

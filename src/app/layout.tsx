@@ -2,15 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-// Components
-
-import TopBar from "./components/Topbar";
-// import TripList from "./components/TripList";
-import OverlayPanel from "./components/OverlayPanel";
-// import DistanceForm from "./components/DistanceForm";
-import MonthlySummaryCard from "./components/MonthlySummaryCard";
-
-
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
