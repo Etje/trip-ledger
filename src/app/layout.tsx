@@ -33,13 +33,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <div className="flex flex-col items-center justify-center">
-          <TopBar />
-          <div className="flex flex-row items-start justify-center w-full gap-4 p-4">
-            <MonthlySummaryCard />
-            <OverlayPanel />
-          </div>
-        </div>
         {children}
       </body>
     </html>
