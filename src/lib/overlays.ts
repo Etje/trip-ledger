@@ -10,13 +10,21 @@ export function getTripDayNumbers(trips: Trip[]): Map<string, number> {
   return new Map(uniqueDates.map((date, index) => [date, index + 1]));
 }
 
-export function generateRittenOverlays(trips: Trip[]): string[] {
+export function generateRidesOverlays(trips: Trip[]): string[] {
   const dayNumbers = getTripDayNumbers(trips);
 
   return [...trips]
     .sort((a, b) => a.date.localeCompare(b.date))
     .map((trip) => {
       const day = dayNumbers.get(trip.date)!;
-      return `day ${day} · ${trip.from} → ${trip.to} / ${trip.mode} ${formatOverlayAmount(trip.actualCost)}`;
+      return `day ${day} - ${trip.from} → ${trip.to} / ${trip.mode} ${formatOverlayAmount(trip.actualCost)}`;
     });
+}
+
+export function generateDaysOverlays(trips: Trip[]): string[] {
+  const dayNumbers = getTripDayNumbers(trips);
+
+  return Array.from(dayNumbers.entries()).map(([date, day]) => {
+    return `day ${day} - ${date}`;
+  });
 }

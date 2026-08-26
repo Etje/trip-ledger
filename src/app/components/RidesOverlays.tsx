@@ -2,11 +2,11 @@
 
 import { useState } from 'react';
 import { useTripStore } from '../../lib/useTripStore';
-import { generateRittenOverlays } from '../../lib/overlays';
+import { generateRidesOverlays } from '../../lib/overlays';
 
-export default function RittenOverlays() {
+export default function RidesOverlays() {
     const trips = useTripStore((state) => state.trips);
-    const overlays = generateRittenOverlays(trips);
+    const overlays = generateRidesOverlays(trips);
     const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
 
     const handleCopy = async (line: string, index: number) => {
@@ -18,7 +18,7 @@ export default function RittenOverlays() {
     };
 
     if (overlays.length === 0) {
-        return <p>Nog geen ritten om te overlayen.</p>;
+        return <p>No rides to overlay.</p>;
     }
 
     return (

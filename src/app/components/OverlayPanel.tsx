@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import Button from "./Button";
-import RittenOverlays from "./RittenOverlays";
+import RidesOverlays from "./RidesOverlays";
+import DaysOverlays from "./DaysOverlays";
 
 type OverlayTab = 'ritten' | 'dagen' | 'maand' | 'afstand';
 
@@ -12,7 +13,6 @@ export default function OverlayPanel() {
     const tabs: { id: OverlayTab; label: string }[] = [
         { id: 'ritten', label: '[Ritten]' },
         { id: 'dagen', label: '[Dagen]' },
-        { id: 'maand', label: '[Maand]' },
         { id: 'afstand', label: '[Afstand]' },
     ];
 
@@ -46,9 +46,8 @@ export default function OverlayPanel() {
 
         {/* Hier komt later de content van de actieve tab */}
         <div className="mt-6 font-mono text-sm text-[#6b6b6b]">
-            {activeTab === 'ritten' && <RittenOverlays />}
-            {activeTab === 'dagen' && <p>Dagen overlays komen hier...</p>}
-            {activeTab === 'maand' && <p>Maand overlays komen hier...</p>}
+            {activeTab === 'ritten' && <RidesOverlays />}
+            {activeTab === 'dagen' && <DaysOverlays />}
             {activeTab === 'afstand' && <p>Afstand overlays komen hier...</p>}
         </div>
         </div>

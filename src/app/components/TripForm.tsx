@@ -76,7 +76,7 @@ export default function TripForm() {
   };
 
   return (
-      <div className="w-full rounded-lg border border-border bg-background p-4">
+      <div className="w-full rounded-lg border border-border bg-background p-4 max-w-6xl">
 
         <form onSubmit={handleSubmit} className="p-5 font-mono text-sm">
           <div>
