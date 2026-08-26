@@ -11,6 +11,7 @@ export type TransportMode =
 	| "other";
 
 export interface Trip {
+	id: string;
 	date: string;
 	from: string;
 	to: string;
@@ -19,6 +20,8 @@ export interface Trip {
 	normalCost: number;
 	note?: string;
 }
+
+export type NewTrip = Omit<Trip, "id">;
 
 export interface PointOfInterest {}
 

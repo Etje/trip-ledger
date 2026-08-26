@@ -1,11 +1,11 @@
 'use client';
 
-import { redirect } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react';
 import { useTripStore } from '../../lib/useTripStore';
-import type { TransportMode, Trip } from '../../lib/types';
+import type { NewTrip, TransportMode } from '../../lib/types';
 
-type TripFormData = Trip;
+type TripFormData = NewTrip;
 
 const transportOptions: { value: TransportMode; label: string }[] = [
   { value: 'train', label: 'train' },
@@ -20,7 +20,9 @@ const transportOptions: { value: TransportMode; label: string }[] = [
 
 export default function TripForm() {
   const today = new Date().toISOString().split('T')[0];
+  const router = useRouter();
   const addTrip = useTripStore((state) => state.addTrip);
+  const [error, setError] = useState<string | null>(null);
 
   const [form, setForm] = useState<TripFormData>({
     date: today,
@@ -43,16 +45,22 @@ export default function TripForm() {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.from.trim() || !form.to.trim()) return;
 
-    addTrip({
-      ...form,
-      from: form.from.trim(),
-      to: form.to.trim(),
-      note: form.note?.trim() || undefined,
-    });
+    setError(null);
+    try {
+      await addTrip({
+        ...form,
+        from: form.from.trim(),
+        to: form.to.trim(),
+        note: form.note?.trim() || undefined,
+      });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Opslaan is mislukt.');
+      return;
+    }
 
     setForm({
       date: today,
@@ -64,7 +72,7 @@ export default function TripForm() {
       note: '',
     });
 
-    redirect('/');
+    router.push('/');
   };
 
   return (
@@ -167,6 +175,10 @@ export default function TripForm() {
               />
             </div>
           </div>
+
+          {error && (
+            <p className="pt-2 text-xs text-red-500">{error}</p>
+          )}
 
           {/* Actions */}
           <div className="flex items-center justify-end gap-3 pt-2">

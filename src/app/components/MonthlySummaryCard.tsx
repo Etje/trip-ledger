@@ -11,8 +11,17 @@ const currencyFormatter = new Intl.NumberFormat('nl-NL', {
 export default function MonthlySummaryCard() {
     const trips = useTripStore((state) => state.trips);
     const subscription = useTripStore((state) => state.subscription);
+    const status = useTripStore((state) => state.status);
 
     const summary = summarizeMonth(trips, subscription, getCurrentMonthKey());
+
+    if (status !== 'loaded') {
+        return (
+            <div className="w-full text-center border border-border p-4 rounded-lg font-mono text-sm text-[#6b6b6b]">
+                Laden...
+            </div>
+        );
+    }
 
     return (
         <div className="w-full text-center border border-border p-4 rounded-lg font-mono text-sm">
