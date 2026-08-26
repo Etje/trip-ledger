@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Button from "./Button";
+import RittenOverlays from "./RittenOverlays";
 
 type OverlayTab = 'ritten' | 'dagen' | 'maand' | 'afstand';
 
@@ -45,7 +46,7 @@ export default function OverlayPanel() {
 
         {/* Hier komt later de content van de actieve tab */}
         <div className="mt-6 font-mono text-sm text-[#6b6b6b]">
-            {activeTab === 'ritten' && <p>Ritten overlays komen hier...</p>}
+            {activeTab === 'ritten' && <RittenOverlays />}
             {activeTab === 'dagen' && <p>Dagen overlays komen hier...</p>}
             {activeTab === 'maand' && <p>Maand overlays komen hier...</p>}
             {activeTab === 'afstand' && <p>Afstand overlays komen hier...</p>}

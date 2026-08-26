@@ -24,6 +24,14 @@ export interface PointOfInterest {}
 
 export interface Overlay {}
 
-export interface Subscription {}
+export interface Subscription {
+	name: string;
+	monthlyCost: number;
+}
 
-export interface MonthSummary {}
+export interface MonthSummary {
+	month: string;
+	subscriptionCost: number;
+	totalValue: number;
+	saved: number;
+}

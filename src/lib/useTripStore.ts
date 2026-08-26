@@ -4,17 +4,24 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
 import { getStoredValue, removeStoredValue, setStoredValue } from "./storage";
-import type { PointOfInterest, Trip } from "./types";
+import type { PointOfInterest, Subscription, Trip } from "./types";
 
 const storageKey = "trip-ledger-store";
+
+const defaultSubscription: Subscription = {
+  name: "Deutschlandticket",
+  monthlyCost: 58,
+};
 
 type TripStore = {
   trips: Trip[];
   pointsOfInterest: PointOfInterest[];
+  subscription: Subscription;
   addTrip: (trip: Trip) => void;
   removeTrip: (trip: Trip) => void;
   addPointOfInterest: (pointOfInterest: PointOfInterest) => void;
   removePointOfInterest: (pointOfInterest: PointOfInterest) => void;
+  setSubscription: (subscription: Subscription) => void;
   clear: () => void;
 };
 
@@ -23,6 +30,7 @@ export const useTripStore = create<TripStore>()(
     (set) => ({
       trips: [],
       pointsOfInterest: [],
+      subscription: defaultSubscription,
       addTrip: (trip) => set((state) => ({ trips: [...state.trips, trip] })),
       removeTrip: (trip) =>
         set((state) => ({
@@ -38,7 +46,9 @@ export const useTripStore = create<TripStore>()(
             (currentPointOfInterest) => currentPointOfInterest !== pointOfInterest,
           ),
         })),
-      clear: () => set({ trips: [], pointsOfInterest: [] }),
+      setSubscription: (subscription) => set({ subscription }),
+      clear: () =>
+        set({ trips: [], pointsOfInterest: [], subscription: defaultSubscription }),
     }),
     {
       name: storageKey,
