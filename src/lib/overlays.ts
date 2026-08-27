@@ -52,3 +52,11 @@ export function generateStationsOverlays(trips: Trip[]): string[] {
     .sort((a, b) => a.date.localeCompare(b.date) || a.arrivalTime!.localeCompare(b.arrivalTime!))
     .map((trip) => `${trip.to} - ${formatOverlayTime(trip.arrivalTime!)}`);
 }
+
+const HARDCODED_DISTANCE_KM = 42;
+
+export function generateDistanceOverlays(trips: Trip[]): string[] {
+  return [...trips]
+    .sort((a, b) => a.date.localeCompare(b.date))
+    .map((trip) => `${trip.from} → ${trip.to} - ${HARDCODED_DISTANCE_KM} km`);
+}

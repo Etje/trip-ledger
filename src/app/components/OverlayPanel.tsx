@@ -5,6 +5,7 @@ import Button from "./Button";
 import RidesOverlays from "./RidesOverlays";
 import DaysOverlays from "./DaysOverlays";
 import StationsOverlays from "./StationsOverlays";
+import DistanceOverlays from "./DistanceOverlays";
 
 type OverlayTab = 'ritten' | 'dagen' | 'maand' | 'afstand' | 'stations';
 
@@ -51,7 +52,7 @@ export default function OverlayPanel() {
             {activeTab === 'ritten' && <RidesOverlays />}
             {activeTab === 'dagen' && <DaysOverlays />}
             {activeTab === 'stations' && <StationsOverlays />}
-            {activeTab === 'afstand' && <p>Afstand overlays komen hier...</p>}
+            {activeTab === 'afstand' && <DistanceOverlays />}
         </div>
         </div>
     );
