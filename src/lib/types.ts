@@ -19,6 +19,7 @@ export interface Trip {
 	actualCost: number;
 	normalCost: number;
 	note?: string;
+	arrivalTime?: string;
 }
 
 export type NewTrip = Omit<Trip, "id">;

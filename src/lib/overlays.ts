@@ -1,8 +1,25 @@
 import type { Trip } from "./types";
 
+const DUTCH_MONTHS = [
+  "jan", "feb", "mrt", "apr", "mei", "jun",
+  "jul", "aug", "sep", "okt", "nov", "dec",
+];
+
 function formatOverlayAmount(amount: number): string {
   const rounded = Math.round(amount * 100) / 100;
   return `€${parseFloat(rounded.toFixed(2))}`;
+}
+
+function formatOverlayDate(date: string): string {
+  const [year, month, day] = date.split("-").map(Number);
+  return `${day} ${DUTCH_MONTHS[month - 1]} ${year}`;
+}
+
+function formatOverlayTime(time: string): string {
+  const [hours, minutes] = time.split(":").map(Number);
+  const period = hours >= 12 ? "PM" : "AM";
+  const displayHours = hours % 12 === 0 ? 12 : hours % 12;
+  return `${displayHours}:${minutes.toString().padStart(2, "0")} ${period}`;
 }
 
 export function getTripDayNumbers(trips: Trip[]): Map<string, number> {
@@ -25,6 +42,13 @@ export function generateDaysOverlays(trips: Trip[]): string[] {
   const dayNumbers = getTripDayNumbers(trips);
 
   return Array.from(dayNumbers.entries()).map(([date, day]) => {
-    return `day ${day} - ${date}`;
+    return `day ${day} - ${formatOverlayDate(date)}`;
   });
+}
+
+export function generateStationsOverlays(trips: Trip[]): string[] {
+  return [...trips]
+    .filter((trip) => !!trip.arrivalTime)
+    .sort((a, b) => a.date.localeCompare(b.date) || a.arrivalTime!.localeCompare(b.arrivalTime!))
+    .map((trip) => `${trip.to} - ${formatOverlayTime(trip.arrivalTime!)}`);
 }

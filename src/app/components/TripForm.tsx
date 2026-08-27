@@ -32,6 +32,7 @@ export default function TripForm() {
     actualCost: 0,
     normalCost: 0,
     note: '',
+    arrivalTime: '',
   });
 
   const handleChange = (
@@ -56,6 +57,7 @@ export default function TripForm() {
         from: form.from.trim(),
         to: form.to.trim(),
         note: form.note?.trim() || undefined,
+        arrivalTime: form.arrivalTime || undefined,
       });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Opslaan is mislukt.');
@@ -70,6 +72,7 @@ export default function TripForm() {
       actualCost: 0,
       normalCost: 0,
       note: '',
+      arrivalTime: '',
     });
 
     router.push('/');
@@ -79,18 +82,32 @@ export default function TripForm() {
       <div className="w-full rounded-lg border border-border bg-background p-4 max-w-6xl">
 
         <form onSubmit={handleSubmit} className="p-5 font-mono text-sm">
-          <div>
-            <label className="mb-1.5 block text-xs uppercase tracking-wider">
-              Datum
-            </label>
-            <input
-              type="date"
-              name="date"
-              value={form.date}
-              onChange={handleChange}
-              className="w-full rounded border border-border px-3 py-2 outline-none"
-              required
-            />
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="mb-1.5 block text-xs uppercase tracking-wider">
+                Datum
+              </label>
+              <input
+                type="date"
+                name="date"
+                value={form.date}
+                onChange={handleChange}
+                className="w-full rounded border border-border px-3 py-2 outline-none"
+                required
+              />
+            </div>
+            <div>
+              <label className="mb-1.5 block text-xs uppercase tracking-wider">
+                Aankomsttijd
+              </label>
+              <input
+                type="time"
+                name="arrivalTime"
+                value={form.arrivalTime}
+                onChange={handleChange}
+                className="w-full rounded border border-border px-3 py-2 outline-none"
+              />
+            </div>
           </div>
 
           {/* Van → Naar */}

@@ -10,6 +10,7 @@ type TripRow = {
   actual_cost: number;
   normal_cost: number;
   note: string | null;
+  arrival_time: string | null;
 };
 
 function rowToTrip(row: TripRow): Trip {
@@ -22,6 +23,7 @@ function rowToTrip(row: TripRow): Trip {
     actualCost: row.actual_cost,
     normalCost: row.normal_cost,
     note: row.note ?? undefined,
+    arrivalTime: row.arrival_time ?? undefined,
   };
 }
 
@@ -34,6 +36,7 @@ function tripToRow(trip: NewTrip) {
     actual_cost: trip.actualCost,
     normal_cost: trip.normalCost,
     note: trip.note ?? null,
+    arrival_time: trip.arrivalTime ?? null,
   };
 }
 

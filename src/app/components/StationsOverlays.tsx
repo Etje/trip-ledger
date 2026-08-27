@@ -2,11 +2,11 @@
 
 import { useState } from 'react';
 import { useTripStore } from '../../lib/useTripStore';
-import { generateDaysOverlays } from "@/lib/overlays";
+import { generateStationsOverlays } from '../../lib/overlays';
 
-export default function DaysOverlays() {
+export default function StationsOverlays() {
     const trips = useTripStore((state) => state.trips);
-    const overlays = generateDaysOverlays(trips);
+    const overlays = generateStationsOverlays(trips);
     const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
 
     const handleCopy = async (line: string, index: number) => {
@@ -17,8 +17,8 @@ export default function DaysOverlays() {
         }, 1500);
     };
 
-    if (!overlays.length) {
-        return <p>No rides to overlay.</p>;
+    if (overlays.length === 0) {
+        return <p>No stations to overlay.</p>;
     }
 
     return (
