@@ -23,14 +23,19 @@ export default function MonthlySummaryCard() {
         );
     }
 
+    const isNegative = summary.saved < 0;
+    const label = isNegative ? 'kost' : 'bespaard';
+    const amountColor = isNegative ? 'text-[#ff5c5c]' : 'text-[#00ff9d]';
+    const amount = Math.abs(summary.saved);
+
     return (
         <div className="w-full text-center border border-border p-4 rounded-lg font-mono text-sm">
             <span className="text-[#6b6b6b]">
                 {subscription.name.toLowerCase()} {currencyFormatter.format(summary.subscriptionCost)}
             </span>
             <span className="text-[#6b6b6b]"> · waarde benut {currencyFormatter.format(summary.totalValue)}</span>
-            <span className="text-[#e6e6e6]"> · bespaard </span>
-            <span className="text-[#00ff9d] font-bold">{currencyFormatter.format(summary.saved)}</span>
+            <span className="text-[#e6e6e6]"> · {label} </span>
+            <span className={`${amountColor} font-bold`}>{currencyFormatter.format(amount)}</span>
         </div>
     );
 }
