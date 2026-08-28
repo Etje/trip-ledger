@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-object-type */
-
 export type TransportMode =
 	| "train"
 	| "bus"
@@ -20,13 +18,10 @@ export interface Trip {
 	normalCost: number;
 	note?: string;
 	arrivalTime?: string;
+	distanceKm?: number;
 }
 
 export type NewTrip = Omit<Trip, "id">;
-
-export interface PointOfInterest {}
-
-export interface Overlay {}
 
 export interface Subscription {
 	name: string;

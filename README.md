@@ -29,7 +29,8 @@ Single-user tool, geen login. Data wordt bewaard in Supabase (Postgres).
      actual_cost numeric not null default 0,
      normal_cost numeric not null default 0,
      note text,
-     arrival_time time
+     arrival_time time,
+     distance_km numeric
    );
 
    create table subscription (
@@ -60,16 +61,10 @@ Per rit die onder het ticket valt vul je dus in:
 - **Normale prijs** — wat die rit zonder ticket gekost zou hebben (dit telt mee als "waarde benut")
 - **Betaald** — `€0`, want die rit is al gedekt door het abonnement
 
-Let op: er is nog geen UI om de abonnementsprijs zelf aan te passen — dat gaat nu alleen door de rij met `id = 1` in de `subscription`-tabel handmatig te updaten via de Supabase Table Editor of SQL Editor:
-```sql
-update subscription set monthly_cost = 63 where id = 1;
-```
+De abonnementsprijs pas je aan via het instelveldje op de homepage (onder de maandkaart) — geen handmatige Supabase-update meer nodig.
 
 ## In de pipeline
 
-- **"Maand" overlay tab** — de maandsamenvatting ook met een copy-knop in het Overlay Panel
-- **Subscription edit UI** — abonnementsprijs aanpassen vanuit de app zelf i.p.v. handmatig in Supabase
-- **Afstand-formulier + "Afstand" overlay** — handmatige afstand + point-of-interest invoer
 - **Trip edit UI** — nu alleen toevoegen/verwijderen, nog geen bewerken
 - **Formuliervalidatie met Zod** — geïnstalleerd, nog niet gebruikt
 - **Overlay extras** — lopend totaal, "bespaard tot nu"-badge, volledig logblok

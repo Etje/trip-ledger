@@ -11,6 +11,7 @@ type TripRow = {
   normal_cost: number;
   note: string | null;
   arrival_time: string | null;
+  distance_km: number | null;
 };
 
 function rowToTrip(row: TripRow): Trip {
@@ -24,6 +25,7 @@ function rowToTrip(row: TripRow): Trip {
     normalCost: row.normal_cost,
     note: row.note ?? undefined,
     arrivalTime: row.arrival_time ?? undefined,
+    distanceKm: row.distance_km ?? undefined,
   };
 }
 
@@ -37,6 +39,7 @@ function tripToRow(trip: NewTrip) {
     normal_cost: trip.normalCost,
     note: trip.note ?? null,
     arrival_time: trip.arrivalTime ?? null,
+    distance_km: trip.distanceKm ?? null,
   };
 }
 
@@ -64,4 +67,16 @@ export async function insertTrip(trip: NewTrip): Promise<Trip> {
 export async function deleteTrip(id: string): Promise<void> {
   const { error } = await supabase.from("trips").delete().eq("id", id);
   if (error) throw error;
+}
+
+export async function updateTripDistance(id: string, distanceKm: number): Promise<Trip> {
+  const { data, error } = await supabase
+    .from("trips")
+    .update({ distance_km: distanceKm })
+    .eq("id", id)
+    .select()
+    .single();
+
+  if (error) throw error;
+  return rowToTrip(data as TripRow);
 }

@@ -1,4 +1,5 @@
-import type { Trip } from "./types";
+import { summarizeMonth } from "./monthSummary";
+import type { Subscription, Trip } from "./types";
 
 const DUTCH_MONTHS = [
   "jan", "feb", "mrt", "apr", "mei", "jun",
@@ -53,10 +54,19 @@ export function generateStationsOverlays(trips: Trip[]): string[] {
     .map((trip) => `${trip.to} - ${formatOverlayTime(trip.arrivalTime!)}`);
 }
 
-const HARDCODED_DISTANCE_KM = 42;
-
 export function generateDistanceOverlays(trips: Trip[]): string[] {
   return [...trips]
+    .filter((trip) => trip.distanceKm != null)
     .sort((a, b) => a.date.localeCompare(b.date))
-    .map((trip) => `${trip.from} → ${trip.to} - ${HARDCODED_DISTANCE_KM} km`);
+    .map((trip) => `${trip.from} → ${trip.to} - ${trip.distanceKm} km`);
+}
+
+export function generateMonthOverlay(
+  trips: Trip[],
+  subscription: Subscription,
+  monthKey: string,
+): string {
+  const summary = summarizeMonth(trips, subscription, monthKey);
+  const [year, month] = monthKey.split("-").map(Number);
+  return `${DUTCH_MONTHS[month - 1]} ${year} · ticket ${formatOverlayAmount(summary.subscriptionCost)} / value ${formatOverlayAmount(summary.totalValue)} / saved ${formatOverlayAmount(summary.saved)}`;
 }

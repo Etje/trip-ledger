@@ -2,9 +2,9 @@
 
 import { create } from "zustand";
 
-import { fetchTrips, insertTrip, deleteTrip } from "./api/trips";
+import { fetchTrips, insertTrip, deleteTrip, updateTripDistance } from "./api/trips";
 import { fetchSubscription, saveSubscription } from "./api/subscription";
-import type { NewTrip, PointOfInterest, Subscription, Trip } from "./types";
+import type { NewTrip, Subscription, Trip } from "./types";
 
 const defaultSubscription: Subscription = {
   name: "Deutschlandticket",
@@ -15,15 +15,13 @@ type Status = "idle" | "loading" | "loaded" | "error";
 
 type TripStore = {
   trips: Trip[];
-  pointsOfInterest: PointOfInterest[];
   subscription: Subscription;
   status: Status;
   error: string | null;
   hydrate: () => Promise<void>;
   addTrip: (trip: NewTrip) => Promise<void>;
   removeTrip: (id: string) => Promise<void>;
-  addPointOfInterest: (pointOfInterest: PointOfInterest) => void;
-  removePointOfInterest: (pointOfInterest: PointOfInterest) => void;
+  updateTripDistance: (id: string, distanceKm: number) => Promise<void>;
   setSubscription: (subscription: Subscription) => Promise<void>;
 };
 
@@ -31,7 +29,6 @@ let hasHydrated = false;
 
 export const useTripStore = create<TripStore>()((set) => ({
   trips: [],
-  pointsOfInterest: [],
   subscription: defaultSubscription,
   status: "idle",
   error: null,
@@ -62,16 +59,12 @@ export const useTripStore = create<TripStore>()((set) => ({
     await deleteTrip(id);
     set((state) => ({ trips: state.trips.filter((trip) => trip.id !== id) }));
   },
-  addPointOfInterest: (pointOfInterest) =>
+  updateTripDistance: async (id, distanceKm) => {
+    const updated = await updateTripDistance(id, distanceKm);
     set((state) => ({
-      pointsOfInterest: [...state.pointsOfInterest, pointOfInterest],
-    })),
-  removePointOfInterest: (pointOfInterest) =>
-    set((state) => ({
-      pointsOfInterest: state.pointsOfInterest.filter(
-        (currentPointOfInterest) => currentPointOfInterest !== pointOfInterest,
-      ),
-    })),
+      trips: state.trips.map((trip) => (trip.id === id ? updated : trip)),
+    }));
+  },
   setSubscription: async (subscription) => {
     await saveSubscription(subscription);
     set({ subscription });
