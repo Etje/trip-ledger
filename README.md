@@ -40,12 +40,18 @@ Single-user tool, geen login. Data wordt bewaard in Supabase (Postgres).
    );
 
    insert into subscription (id, name, monthly_cost) values (1, 'Deutschlandticket', 63);
+
+   -- Deze app heeft geen login en gebruikt daarom geen RLS.
+   alter table trips disable row level security;
+   alter table subscription disable row level security;
    ```
 3. Kopieer `.env.example` naar `.env.local` en vul de waarden in (Project Settings → API Keys in het Supabase dashboard):
    ```
    NEXT_PUBLIC_SUPABASE_URL=
    NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
    ```
+
+Als de tabellen al bestaan en je bij het opslaan de fout `new row violates row-level security policy` krijgt, voer dan alleen de twee `alter table ... disable row level security`-regels hierboven uit in de Supabase SQL Editor. De client gebruikt geen ingelogde gebruiker; RLS uitschakelen is daarom nodig voor deze single-user opzet. Gebruik deze configuratie niet voor een app met meerdere gebruikers. Voeg dan auth en RLS-policies toe die toegang per gebruiker afdwingen.
 4. Start de dev server:
    ```bash
    pnpm dev

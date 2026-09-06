@@ -8,7 +8,6 @@ export default function DistanceForm() {
     const updateTripDistance = useTripStore((state) => state.updateTripDistance);
     const [drafts, setDrafts] = useState<Record<string, string>>({});
     const [savedId, setSavedId] = useState<string | null>(null);
-
     const sortedTrips = [...trips].sort((a, b) => a.date.localeCompare(b.date));
 
     const handleChange = (id: string, value: string) => {

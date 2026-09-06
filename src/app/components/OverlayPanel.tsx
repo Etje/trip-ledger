@@ -1,6 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+import { useTripStore } from '../../lib/useTripStore';
+
 import Button from "./Button";
 import RidesOverlays from "./RidesOverlays";
 import DaysOverlays from "./DaysOverlays";
@@ -12,51 +14,55 @@ type OverlayTab = 'ritten' | 'dagen' | 'maand' | 'afstand' | 'stations';
 
 export default function OverlayPanel() {
     const [activeTab, setActiveTab] = useState<OverlayTab>('ritten');
+    const trips = useTripStore((state) => state.trips);
 
     const tabs: { id: OverlayTab; label: string }[] = [
-        { id: 'ritten', label: '[Ritten]' },
-        { id: 'dagen', label: '[Dagen]' },
-        { id: 'maand', label: '[Maand]' },
-        { id: 'stations', label: '[Stations]' },
-        { id: 'afstand', label: '[Afstand]' },
+        { id: 'ritten', label: '<Ritten>' },
+        { id: 'dagen', label: '<Dagen>' },
+        { id: 'maand', label: '<Maand>' },
+        { id: 'stations', label: '<Stations>' },
+        { id: 'afstand', label: '<Afstand>' },
     ];
 
     return (
         <div className="w-full rounded-lg border border-border p-4">
-        <h1 className="font-mono text-sm text-[#e6e6e6]">OVERLAY PANEL</h1>
+            <h1 className="font-mono text-sm text-[#e6e6e6]">OVERLAY PANEL</h1>
 
-        {/* Tabs */}
-        <div className="mt-4 flex flex-row items-center gap-x-3">
-            {tabs.map((tab) => {
-            const isActive = activeTab === tab.id;
+            <div className="mt-4 flex flex-row items-center gap-x-3">
+                {tabs.map((tab) => {
+                const isActive = activeTab === tab.id;
+                
+                if(trips?.length === 0 && tab?.id === 'afstand') {
+                    return;
+                }
 
-            return (
-                <Button
-                    key={tab.id}
-                    withIcon={false}
-                    onClick={() => setActiveTab(tab.id)}
-                    extraClasses={`
-                        w-full transition-colors
-                        ${isActive
-                        ? 'border-green-500 text-green-500'
-                        : 'hover:border-green-600 hover:text-green-600'
-                        }
-                    `}
-                    >
-                    {tab.label}
-                </Button>
-            );
-            })}
-        </div>
+                return (
+                    <Button
+                        key={tab.id}
+                        withIcon={false}
+                        onClick={() => setActiveTab(tab.id)}
+                        extraClasses={`
+                            w-full transition-colors
+                            ${isActive
+                            ? 'border-green-500 text-green-500'
+                            : 'hover:border-green-600 hover:text-green-600'
+                            }
+                        `}
+                        >
+                        {tab.label}
+                    </Button>
+                );
+                })}
+            </div>
 
-        {/* Hier komt later de content van de actieve tab */}
-        <div className="mt-6 font-mono text-sm text-[#6b6b6b]">
-            {activeTab === 'ritten' && <RidesOverlays />}
-            {activeTab === 'dagen' && <DaysOverlays />}
-            {activeTab === 'maand' && <MonthOverlay />}
-            {activeTab === 'stations' && <StationsOverlays />}
-            {activeTab === 'afstand' && <DistanceOverlays />}
-        </div>
+            {/* Hier komt later de content van de actieve tab */}
+            <div className="mt-6 font-mono text-sm text-[#6b6b6b]">
+                {activeTab === 'ritten' && <RidesOverlays />}
+                {activeTab === 'dagen' && <DaysOverlays />}
+                {activeTab === 'maand' && <MonthOverlay />}
+                {activeTab === 'stations' && <StationsOverlays />}
+                {activeTab === 'afstand' && <DistanceOverlays />}
+            </div>
         </div>
     );
 }

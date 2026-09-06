@@ -1,4 +1,4 @@
-import { summarizeMonth } from "./monthSummary";
+import { getCurrentMonthKey, summarizeMonth } from "./monthSummary";
 import type { Subscription, Trip } from "./types";
 
 const DUTCH_MONTHS = [
@@ -28,14 +28,24 @@ export function getTripDayNumbers(trips: Trip[]): Map<string, number> {
   return new Map(uniqueDates.map((date, index) => [date, index + 1]));
 }
 
-export function generateRidesOverlays(trips: Trip[]): string[] {
-  const dayNumbers = getTripDayNumbers(trips);
+export function getDateOfTheWeek(date: string): string {
+  const today = new Date(date);
+  return `${today.toLocaleDateString("en-US", 
+    {
+      weekday: "long" 
+    }
+  )}, ${today.getDate().toString()} ${today.toLocaleDateString("en-US", 
+    { 
+      month: "long" 
+    }
+  )} ${today.getFullYear()}`;
+}
 
+export function generateRidesOverlays(trips: Trip[]): string[] {
   return [...trips]
     .sort((a, b) => a.date.localeCompare(b.date))
     .map((trip) => {
-      const day = dayNumbers.get(trip.date)!;
-      return `day ${day} - ${trip.from} → ${trip.to} / ${trip.mode} ${formatOverlayAmount(trip.actualCost)}`;
+      return `${getDateOfTheWeek(trip.date)} - ${trip.from} → ${trip.to} / ${trip.mode} ${formatOverlayAmount(trip.actualCost)}`;
     });
 }
 
@@ -51,7 +61,7 @@ export function generateStationsOverlays(trips: Trip[]): string[] {
   return [...trips]
     .filter((trip) => !!trip.arrivalTime)
     .sort((a, b) => a.date.localeCompare(b.date) || a.arrivalTime!.localeCompare(b.arrivalTime!))
-    .map((trip) => `${trip.to} - ${formatOverlayTime(trip.arrivalTime!)}`);
+    .map((trip) => `${trip.to}, ${formatOverlayTime(trip.arrivalTime!)}`);
 }
 
 export function generateDistanceOverlays(trips: Trip[]): string[] {
@@ -66,7 +76,7 @@ export function generateMonthOverlay(
   subscription: Subscription,
   monthKey: string,
 ): string {
-  const summary = summarizeMonth(trips, subscription, monthKey);
+  const summary = summarizeMonth(trips, subscription, getCurrentMonthKey());
   const [year, month] = monthKey.split("-").map(Number);
-  return `${DUTCH_MONTHS[month - 1]} ${year} · ticket ${formatOverlayAmount(summary.subscriptionCost)} / value ${formatOverlayAmount(summary.totalValue)} / saved ${formatOverlayAmount(summary.saved)}`;
+  return `${DUTCH_MONTHS[month - 1]} ${year} / ticket ${formatOverlayAmount(summary.subscriptionCost)} / value ${formatOverlayAmount(summary.totalValue)} / saved ${formatOverlayAmount(summary.saved)}`;
 }

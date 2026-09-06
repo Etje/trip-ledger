@@ -13,14 +13,14 @@ export function summarizeMonth(
   subscription: Subscription,
   monthKey: string,
 ): MonthSummary {
-  const totalValue = trips
-    .filter((trip) => getMonthKey(trip.date) === monthKey)
-    .reduce((sum, trip) => sum + trip.normalCost, 0);
+  const monthTrips = trips.filter((trip) => getMonthKey(trip.date) === monthKey);
+  const totalValue = monthTrips.reduce((sum, trip) => sum + trip.normalCost, 0);
+  const totalPaid = monthTrips.reduce((sum, trip) => sum + trip.actualCost, 0);
 
   return {
-    month: monthKey,
+    month: monthTrips,
     subscriptionCost: subscription.monthlyCost,
     totalValue,
-    saved: totalValue - subscription.monthlyCost,
+    saved: totalValue - totalPaid - subscription.monthlyCost,
   };
 }

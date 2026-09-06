@@ -1,7 +1,9 @@
 'use client';
 
 import { useTripStore } from '../../lib/useTripStore';
-import { getCurrentMonthKey, summarizeMonth } from '../../lib/monthSummary';
+import { summarizeMonth } from '../../lib/monthSummary';
+import { useMemo } from 'react';
+import { getCurrentMonthKey } from '../../lib/monthSummary';
 
 const currencyFormatter = new Intl.NumberFormat('nl-NL', {
     style: 'currency',
@@ -12,10 +14,14 @@ export default function MonthlySummaryCard() {
     const trips = useTripStore((state) => state.trips);
     const subscription = useTripStore((state) => state.subscription);
     const status = useTripStore((state) => state.status);
+    const summary = useMemo(
+        () => status === 'loaded'
+            ? summarizeMonth(trips, subscription, getCurrentMonthKey())
+            : null,
+        [status, trips, subscription],
+    );
 
-    const summary = summarizeMonth(trips, subscription, getCurrentMonthKey());
-
-    if (status !== 'loaded') {
+    if (status !== 'loaded' || !summary) {
         return (
             <div className="w-full text-center border border-border p-4 rounded-lg font-mono text-sm text-[#6b6b6b]">
                 Laden...

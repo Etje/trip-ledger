@@ -29,8 +29,8 @@ export interface Subscription {
 }
 
 export interface MonthSummary {
-	month: string;
 	subscriptionCost: number;
 	totalValue: number;
 	saved: number;
+	month: Trip[];
 }

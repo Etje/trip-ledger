@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useMemo } from 'react';
 import { useTripStore } from '../../lib/useTripStore';
 import { generateMonthOverlay } from '../../lib/overlays';
 import { getCurrentMonthKey } from '../../lib/monthSummary';
@@ -10,7 +11,10 @@ export default function MonthOverlay() {
     const subscription = useTripStore((state) => state.subscription);
     const [copied, setCopied] = useState(false);
 
-    const line = generateMonthOverlay(trips, subscription, getCurrentMonthKey());
+    const line = useMemo(
+        () => generateMonthOverlay(trips, subscription, getCurrentMonthKey()),
+        [trips, subscription],
+    );
 
     const handleCopy = async () => {
         await navigator.clipboard.writeText(line);

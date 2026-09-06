@@ -8,7 +8,7 @@ import type { NewTrip, Subscription, Trip } from "./types";
 
 const defaultSubscription: Subscription = {
   name: "Deutschlandticket",
-  monthlyCost: 58,
+  monthlyCost: 63,
 };
 
 type Status = "idle" | "loading" | "loaded" | "error";

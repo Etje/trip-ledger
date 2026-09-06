@@ -1,5 +1,4 @@
 import TripForm from "../components/TripForm";
-import TripList from "../components/TripList";
 import Topbar from "../components/Topbar";
 
 export default function TripsPage() {
