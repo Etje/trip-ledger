@@ -2,14 +2,14 @@
 
 Personal travel-cost tracker: log trips (datum, van/naar, vervoer, betaalde prijs vs. normale prijs) om te zien hoeveel je bespaart of uitgeeft, plus een generator voor terminal-stijl overlays voor reisvideo's.
 
-Single-user tool, geen login. Data wordt bewaard in Supabase (Postgres).
+Single-user tool met Supabase Auth. Data wordt bewaard in Supabase (Postgres) en is met RLS alleen toegankelijk voor het eigen account.
 
 ## Stack
 
 - Next.js 16 (App Router), React 19, TypeScript
 - Tailwind CSS v4
 - Zustand voor client state, gesynchroniseerd met Supabase
-- Supabase (`@supabase/supabase-js`) als database, benaderd via de publishable API key (geen auth/RLS — bewuste keuze voor een single-user project)
+- Supabase (`@supabase/supabase-js` + `@supabase/ssr`) als database, benaderd via de publishable API key en beveiligd met Supabase Auth + RLS
 - pnpm als package manager
 
 ## Aan de slag
@@ -18,7 +18,7 @@ Single-user tool, geen login. Data wordt bewaard in Supabase (Postgres).
    ```bash
    pnpm install
    ```
-2. Maak een Supabase-project aan op [supabase.com](https://supabase.com). Er is geen `schema.sql` meer in de repo — run onderstaande SQL in de SQL Editor om de tabellen aan te maken:
+2. Maak een Supabase-project aan op [supabase.com](https://supabase.com). Run onderstaande SQL in de SQL Editor om de tabellen aan te maken:
    ```sql
    create table trips (
      id uuid primary key default gen_random_uuid(),
@@ -41,18 +41,16 @@ Single-user tool, geen login. Data wordt bewaard in Supabase (Postgres).
 
    insert into subscription (id, name, monthly_cost) values (1, 'Deutschlandticket', 63);
 
-   -- Deze app heeft geen login en gebruikt daarom geen RLS.
-   alter table trips disable row level security;
-   alter table subscription disable row level security;
    ```
-3. Kopieer `.env.example` naar `.env.local` en vul de waarden in (Project Settings → API Keys in het Supabase dashboard):
+3. Maak via de loginpagina of in Supabase Auth het persoonlijke account aan dat toegang tot Trip Ledger krijgt. Gebruik e-mail + wachtwoord; Supabase Auth slaat het wachtwoord veilig op in `auth.users`. Maak eerst een database-backup en voer daarna [`supabase/migrations/20260906120000_enable_auth_rls.sql`](supabase/migrations/20260906120000_enable_auth_rls.sql) uit in de SQL Editor. De migratie koppelt bestaande records aan het eerste Auth-account, schakelt RLS in en trekt `anon`-toegang in.
+4. Kopieer `.env.example` naar `.env.local` en vul de waarden in (Project Settings → API Keys in het Supabase dashboard):
    ```
    NEXT_PUBLIC_SUPABASE_URL=
    NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
    ```
 
-Als de tabellen al bestaan en je bij het opslaan de fout `new row violates row-level security policy` krijgt, voer dan alleen de twee `alter table ... disable row level security`-regels hierboven uit in de Supabase SQL Editor. De client gebruikt geen ingelogde gebruiker; RLS uitschakelen is daarom nodig voor deze single-user opzet. Gebruik deze configuratie niet voor een app met meerdere gebruikers. Voeg dan auth en RLS-policies toe die toegang per gebruiker afdwingen.
-4. Start de dev server:
+Configureer daarna in Supabase Authentication → URL Configuration de lokale URL `http://localhost:3000/auth/callback` en de productie-URL `https://<jouw-vercel-domein>/auth/callback`.
+5. Start de dev server:
    ```bash
    pnpm dev
    ```

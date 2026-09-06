@@ -4,6 +4,7 @@ Living checklist for the Trip Ledger MVP. See `AGENTS.md` for stack/structure in
 
 ## Done
 
+- [x] Supabase Auth login/logout with email/password, password reset, cookie sessions, protected routes, and ownership/RLS migration (`src/proxy.ts`, `supabase/migrations/`)
 - [x] Trip logging — form (`TripForm`), store (`useTripStore`), overview (`TripList`)
 - [x] Supabase backend — trips + subscription persisted to Postgres (`src/lib/api/`, `src/lib/supabase.ts`), store hydrates from and writes through to the DB instead of localStorage
 - [x] Trip delete UI — `TripList` calls `removeTrip(id)`
@@ -28,6 +29,7 @@ Living checklist for the Trip Ledger MVP. See `AGENTS.md` for stack/structure in
 
 ## Notes
 
+- Before deployment, create the single Auth user, back up the database, run the ownership/RLS migration, and configure Supabase Auth redirect URLs for localhost and Vercel.
 - Package manager is pnpm (pinned via `packageManager` in `package.json`); `package-lock.json` was removed.
 - Old localStorage trips were not migrated — re-enter them manually via `TripForm` once Supabase is set up.
 - `supabase/schema.sql` was removed from the repo — the create-table SQL now lives inline in `README.md`'s "Aan de slag" section, so keep that in sync if the schema changes (e.g. the `arrival_time` column added for the Stations overlay).
